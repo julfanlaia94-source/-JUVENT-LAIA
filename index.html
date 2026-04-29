@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Toko Elektronik - Kasir</title>
+  <style>
+    * { box-sizing: border-box;i margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 10px;
+      padding: 24px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+
+    .title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: #444;
+      margin-bottom: 4px;
+      margin-top: 12px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: #333;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: #1a73e8;
+    }
+
+    input[readonly] {
+      background: #f9f9f9;
+      color: #666;
+    }
+
+    .btn-hitung {
+      width: 100%;
+      padding: 11px;
+      background: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 14px;
+      transition: background 0.2s;
+    }
+    .btn-hitung:hover { background: #1558b0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 0.85rem;
+    }
+
+    thead tr {
+      background: #f5f5f5;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px 6px;
+      text-align: center;
+    }
+
+    th {
+      font-weight: 600;
+      color: #333;
+    }
+
+    td { color: #444; }
+
+    .btn-hapus {
+      background: #e53935;
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .btn-hapus:hover { background: #b71c1c; }
+
+    .total-label {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 14px;
+      color: #222;
+    }
+
+    .grand-total {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #222;
+      margin: 8px 0 12px;
+    }
+
+    .kembalian {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #222;
+      margin: 8px 0 14px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #444;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .btn-cetak, .btn-reset {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-cetak {
+      background: #1a73e8;
+      color: white;
+    }
+    .btn-cetak:hover { background: #1558b0; }
+
+    .btn-reset {
+      background: #1a73e8;
+      color: white;
+    }
+    .btn-reset:hover { background: #1558b0; }
+
+    #struk { display: none; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #struk, #struk * { visibility: visible; }
+      #struk {
+        display: block;
+        position: absolute;
+        left: 0; top: 0;
+        width: 100%;
+        font-family: monospace;
+        font-size: 12px;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">🛒 TOKO ELEKTRONIK</div>
+
+  <label>Nama Kasir</label>
+  <input type="text" id="namaKasir" placeholder="Nama Kasir" />
+
+  <label>Pilih Barang</label>
+  <select id="pilihBarang" onchange="isiHarga()">
+    <option value="">-- Pilih Barang --</option>
+    <option value="TV LED 32 inch|3500000">TV LED 32 inch</option>
+    <option value="Kulkas 2 Pintu|4500000">Kulkas 2 Pintu</option>
+    <option value="Mesin Cuci|3200000">Mesin Cuci</option>
+    <option value="AC 1 PK|4000000">AC 1 PK</option>
+    <option value="Laptop|8500000">Laptop</option>
+    <option value="Smartphone|3000000">Smartphone</option>
+    <option value="Kipas Angin|350000">Kipas Angin</option>
+    <option value="Rice Cooker|450000">Rice Cooker</option>
+    <option value="Setrika|200000">Setrika</option>
+    <option value="Blender|300000">Blender</option>
+  </select>
+
+  <label>Harga</label>
+  <input type="text" id="harga" placeholder="Harga" readonly />
+
+  <label>Jumlah</label>
+  <input type="number" id="jumlah" placeholder="Jumlah" min="1" value="" />
+
+  <button class="btn-hitung" onclick="tambahBarang()">Hitung</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Barang</th>
+        <th>Harga</th>
+        <th>Qty</th>
+        <th>Total</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="tabelBarang"></tbody>
+  </table>
+
+  <div class="total-label" id="labelTotal">Total : Rp 0</div>
+
+  <label>Diskon (%)</label>
+  <input type="number" id="diskon" value="0" min="0" max="100" oninput="hitungGrandTotal()" />
+
+  <div class="checkbox-row">
+    <input type="checkbox" id="ppn" onchange="hitungGrandTotal()" />
+    <label for="ppn" style="margin:0;">Tambah PPN 11%</label>
+  </div>
+
+  <div class="grand-total" id="grandTotal">Grand Total : Rp 0</div>
+
+  <label>Bayar</label>
+  <input type="number" id="bayar" placeholder="" oninput="hitungKembalian()" />
+
+  <div class="kembalian" id="kembalian">Kembalian : Rp 0</div>
+
+  <div class="btn-row">
+    <button class="btn-cetak" onclick="cetakStruk()">🖨️ Cetak Struk</button>
+    <button class="btn-reset" onclick="resetSemua()">🔄 Reset</button>
+  </div>
+</div>
+
+<div id="struk"></div>
+
+<script>
+  let daftarBarang = [];
+
+  function formatRupiah(angka) {
+    return 'Rp ' + angka.toLocaleString('id-ID');
+  }
+
+  function isiHarga() {
+    const select = document.getElementById('pilihBarang');
+    const val = select.value;
+    if (val) {
+      const parts = val.split('|');
+      document.getElementById('harga').value = formatRupiah(parseInt(parts[1]));
+    } else {
+      document.getElementById('harga').value = '';
+    }
+  }
+
+  function tambahBarang() {
+    const select = document.getElementById('pilihBarang');
+    const val = select.value;
+    const jumlah = parseInt(document.getElementById('jumlah').value);
+
+    if (!val) { alert('Pilih barang terlebih dahulu!'); return; }
+    if (!jumlah || jumlah < 1) { alert('Masukkan jumlah yang valid!'); return; }
+
+    const parts = val.split('|');
+    const namaBarang = parts[0];
+    const harga = parseInt(parts[1]);
+    const total = harga * jumlah;
+
+    daftarBarang.push({ nama: namaBarang, harga, jumlah, total });
+    renderTabel();
+    hitungGrandTotal();
+
+    select.value = '';
+    document.getElementById('harga').value = '';
+    document.getElementById('jumlah').value = '';
+  }
+
+  function hapusBarang(index) {
+    daftarBarang.splice(index, 1);
+    renderTabel();
+    hitungGrandTotal();
+  }
+
+  function renderTabel() {
+    const tbody = document.getElementById('tabelBarang');
+    tbody.innerHTML = '';
+    daftarBarang.forEach((item, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${item.nama}</td>
+        <td>${formatRupiah(item.harga)}</td>
+        <td>${item.jumlah}</td>
+        <td>${formatRupiah(item.total)}</td>
+        <td><button class="btn-hapus" onclick="hapusBarang(${i})">Hapus</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function hitungGrandTotal() {
+    const subtotal = daftarBarang.reduce((sum, item) => sum + item.total, 0);
+    document.getElementById('labelTotal').textContent = 'Total : ' + formatRupiah(subtotal);
+
+    const diskon = parseFloat(document.getElementById('diskon').value) || 0;
+    const ppn = document.getElementById('ppn').checked;
+
+    let grand = subtotal - (subtotal * diskon / 100);
+    if (ppn) grand = grand * 1.11;
+
+    document.getElementById('grandTotal').textContent = 'Grand Total : ' + formatRupiah(Math.round(grand));
+    hitungKembalian();
+  }
+
+  function hitungKembalian() {
+    const grandText = document.getElementById('grandTotal').textContent;
+    const grandVal = parseInt(grandText.replace(/[^\d]/g, '')) || 0;
+    const bayar = parseInt(document.getElementById('bayar').value) || 0;
+    const kembalian = bayar - grandVal;
+    document.getElementById('kembalian').textContent = 'Kembalian : ' + formatRupiah(kembalian < 0 ? 0 : kembalian);
+  }
+
+  function cetakStruk() {
+    const kasir = document.getElementById('namaKasir').value || '-';
+    const grandText = document.getElementById('grandTotal').textContent;
+    const bayar = parseInt(document.getElementById('bayar').value) || 0;
+    const grandVal = parseInt(grandText.replace(/[^\d]/g, '')) || 0;
+    const kembalian = bayar - grandVal;
+    const diskon = document.getElementById('diskon').value || 0;
+    const ppn = document.getElementById('ppn').checked;
+
+    let rows = daftarBarang.map(item =>
+      ${item.nama} x${item.jumlah} = ${formatRupiah(item.total)}
+    ).join('<br>');
+
+    const now = new Date();
+    const tgl = now.toLocaleDateString('id-ID') + ' ' + now.toLocaleTimeString('id-ID');
+
+    document.getElementById('struk').innerHTML = `
+      <div style="text-align:center; font-weight:bold; font-size:14px;">🛒 TOKO ELEKTRONIK</div>
+      <div style="text-align:center;">================================</div>
+      <div>Kasir : ${kasir}</div>
+      <div>Tanggal : ${tgl}</div>
+      <div>================================</div>
+      ${rows}
+      <div>================================</div>
+      <div>${document.getElementById('labelTotal').textContent}</div>
+      <div>Diskon : ${diskon}%</div>
+      ${ppn ? '<div>PPN : 11%</div>' : ''}
+      <div><b>${grandText}</b></div>
+      <div>Bayar : ${formatRupiah(bayar)}</div>
+      <div>Kembalian : ${formatRupiah(kembalian < 0 ? 0 : kembalian)}</div>
+      <div style="text-align:center; margin-top:10px;">Terima Kasih!</div>
+    `;
+    window.print();
+  }
+
+  function resetSemua() {
+    daftarBarang = [];
+    document.getElementById('namaKasir').value = '';
+    document.getElementById('pilihBarang').value = '';
+    document.getElementById('harga').value = '';
+    document.getElementById('jumlah').value = '';
+    document.getElementById('diskon').value = '0';
+    document.getElementById('ppn').checked = false;
+    document.getElementById('bayar').value = '';
+    renderTabel();
+    document.getElementById('labelTotal').textContent = 'Total : Rp 0';
+    document.getElementById('grandTotal').textContent = 'Grand Total : Rp 0';
+    document.getElementById('kembalian').textContent = 'Kembalian : Rp 0';
+  }
+</script>
+
+</body>
+</html>
